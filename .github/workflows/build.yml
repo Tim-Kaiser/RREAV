@@ -1,0 +1,27 @@
+name: build
+run-name: ${{github.actor}} build
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+env:
+  BUILD_DIR: ${{github.workspace}}/build
+  BASE_DIR: ${{github.workspace}}
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: CMake Config
+        run: cmake  -B $BUILD_DIR -S $BASE_DIR
+
+      - name: Build
+        run: cmake --build $BUILD_DIR --config $BUILD_TYPE
+
+      - name: Test
+        run: ctest --build-config $BUILD_TYPE
