@@ -1,18 +1,18 @@
 #include <optional>
 
-#include "Window.h"
+#include "../include/Interface.h"
 
-Window::Window():
-window_(sf::VideoMode::getDesktopMode(), "Image Editor", sf::Style::Default, sf::State::Windowed, sf::ContextSettings(32)),
+Interface::Interface():
 isRunning_(true)
 {
+    window_.create(sf::VideoMode({800, 600}), "Test");
     window_.setActive(true);
 
     width_ = window_.getSize().x;
     height_ = window_.getSize().y;
 }
 
-void Window::update()
+void Interface::update()
 {
     while (const std::optional event = window_.pollEvent())
     {
@@ -32,22 +32,22 @@ void Window::update()
 
 }
 
-void Window::draw()
+void Interface::draw()
 {
     window_.display();
 }
 
-bool Window::running() const
+bool Interface::running() const
 {
     return isRunning_;
 }
 
-int Window::getWidth() const
+int Interface::getWidth() const
 {
     return width_;
 }
 
-int Window::getHeight() const
+int Interface::getHeight() const
 {
     return height_;
 }

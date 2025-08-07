@@ -1,17 +1,15 @@
-cmake_minimum_required(VERSION 3.10)
-project(ImageEditor VERSION 0.1)
+cmake_minimum_required(VERSION 3.16)
+project(rreav CXX)
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-include(FetchContent)
-FetchContent_Declare(SFML
-                     GIT_REPOSITORY https://github.com/SFML/SFML.git
-                     GIT_TAG 3.0.1
-                     GIT_SHALLOW ON
-                     EXCLUDE_FROM_ALL
-                     SYSTEM)
-FetchContent_MakeAvailable(SFML)
+set(CMAKE_CXX_STANDARD 17)
+set(BUILD_SHARED_LIBS OFF)
 
-add_executable(ImageEditor src/main.cpp src/Window.cpp src/Window.h)
-target_link_libraries(ImageEditor PRIVATE SFML::Graphics SFML::Audio)
+add_compile_definitions(ImDrawIdx=unsigned)
+
+add_subdirectory(dependencies)
+
+add_executable(rreav src/main.cpp src/Interface.cpp)
+
+target_include_directories(rreav PRIVATE include)
+target_link_libraries(rreav PRIVATE sfml-audio sfml-graphics ImGui-SFML::ImGui-SFML)

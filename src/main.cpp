@@ -1,13 +1,16 @@
-#include "Window.h"
+#include <iostream>
+#include "../include/Interface.h"
 
-int main()
-{
-    Window window;
+int main() {
+    std::cout << "Hello World" << std::endl;
 
-    while (window.running())
+    Interface interface;
+
+    while(interface.running())
     {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        window.update();
-        window.draw();
+        interface.update();
+        interface.draw();
     }
+    
+    return 0;
 }
