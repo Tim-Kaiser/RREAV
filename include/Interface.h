@@ -4,10 +4,10 @@
 #include <SFML/OpenGL.hpp>
 
 
-class Window {
+class Interface {
 
 public:
-    Window();
+    Interface();
 
     void update();
     void draw();
@@ -22,5 +22,4 @@ private:
     int width_;
     int height_;
 };
-
 
