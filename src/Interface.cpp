@@ -5,8 +5,10 @@
 Interface::Interface():
 isRunning_(true)
 {
-    window_.create(sf::VideoMode({800, 600}), "Test");
+    window_.create(sf::VideoMode({800, 600}), "Test", sf::Style::Default, sf::State::Windowed);
     window_.setActive(true);
+
+    gladLoadGL(sf::Context::getFunction);
 
     width_ = window_.getSize().x;
     height_ = window_.getSize().y;
