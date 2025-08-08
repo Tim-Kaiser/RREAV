@@ -1,17 +1,18 @@
 #include "../include/ObjectLoader.h"
 
 #include <fstream>
+#include <cstring>
 #include <string>
 #include <iostream>
 #include <sstream>
 
 bool loadObject(const char* path, Object& obj)
 {
-
     std::ifstream file(path);
     if (file.fail()) {
         return false;
     }
+
 
     int num_vert = 0;
     int num_uv = 0;
@@ -26,6 +27,7 @@ bool loadObject(const char* path, Object& obj)
 
     std::string line;
 
+
     while (std::getline(file, line)) 
     {
         if (line[0] == 'v' && line[1] == ' ') {
@@ -39,6 +41,7 @@ bool loadObject(const char* path, Object& obj)
             {
                 parts[i] = strtok(NULL, " ");
             }
+
 
             vertex.x = atof(parts[0]);
             vertex.y = atof(parts[1]);

@@ -1,3 +1,6 @@
+#define GLAD_GL_IMPLEMENTATION
+#include <../include/glad/gl.h>
+
 #include <optional>
 
 #include "../include/Interface.h"

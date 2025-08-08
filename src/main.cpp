@@ -1,6 +1,3 @@
-#define GLAD_GL_IMPLEMENTATION
-#include <../include/glad/gl.h>
-
 #include <iostream>
 #include <vector>
 #include <glm/glm.hpp>
@@ -21,13 +18,18 @@ int main() {
 	std::unique_ptr<Shader> renderShader = shaderManager.CreateShaders("../shaders/main.vert", "../shaders/main.frag");
 
 	Object obj;
-	loadObject("Objects/quad.obj", obj);
-	//Model quadModel(&obj, false);
+	if(!loadObject("../objects/quad.obj", obj))
+    {
+        std::cout << "Error creating object!" << std::endl;
+        return 1;
+    }
+
+	Model quadModel(&obj, false);
 
 
     while(interface.running())
     {
-        //quadModel.Render();
+        quadModel.Render();
         interface.update();
         interface.draw();
     }
