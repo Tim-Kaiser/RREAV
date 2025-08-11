@@ -47,5 +47,5 @@ build/*
 # editor files
 .idea/
 
-#models
-!objects/*
+#resources
+!resources/*
