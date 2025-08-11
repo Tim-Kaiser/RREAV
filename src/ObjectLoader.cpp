@@ -6,128 +6,45 @@
 #include <iostream>
 #include <sstream>
 
-bool loadObject(const char* path, Object& obj)
+bool loadObject(const std::string& path, Object& obj)
 {
-    std::ifstream file(path);
-    if (file.fail()) {
+    std::vector<glm::vec3>& pos;
+    std::vector<glm::vec3>& normal;
+    std::vector<glm::vec2>& uv;
+
+
+    Assimp::Importer importer;
+
+    const aiScene* scene = importer.readFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals);
+
+    if(!scene)
+    {
         return false;
     }
 
+    const aiMesh* mesh = scene->mMeshes[0];
 
-    int num_vert = 0;
-    int num_uv = 0;
-    int num_normals = 0;
-
-    std::vector< glm::vec3 > temp_vertices;
-    std::vector< glm::vec2 > temp_uvs;
-    std::vector< glm::vec3 > temp_normals;
-
-    std::vector< size_t > vertexIndices, uvIndices, normalIndices;
-
-
-    std::string line;
-
-
-    while (std::getline(file, line)) 
+    const aiVector3D nullVec(0.0f, 0.0f, 0.0f);
+    for(int i = 0; i < mesh->mNumVertices; i++)
     {
-        if (line[0] == 'v' && line[1] == ' ') {
-            glm::vec3 vertex{};
-            line.erase(0, 1);
+        const aiVector3D* vertPos = &(aiMesh->mVertices[i]);
+        const aiVector3D* vertNormal = &(aiMesh->mNormals[i]) : &nullVec;
+        const aiVector3D* vertUV = aiMesh->hasTextureCoords(0) ? &(aiMesh->mTextureCoords[0][i]) : &nullVec;
 
-            char* parts[3];
-            parts[0] = strtok(&line[0], " ");
+        pos.push_back(glm::vec3(vertPos->x, vertPos->y, vertPos->z));
+        normal.push_back(glm::vec3(vertNormal->x, vertNormal->y, vertNormal->z));
+        uv.push_back(glm::vec3(vertUV->x, vertUV->y));
+    }
 
-            for (int i = 1; i < 3; i++)
-            {
-                parts[i] = strtok(NULL, " ");
-            }
-
-
-            vertex.x = atof(parts[0]);
-            vertex.y = atof(parts[1]);
-            vertex.z = atof(parts[2]);
-
-            temp_vertices.emplace_back(vertex);
-            num_vert++;
-        }
-        else if (line[0] == 'v' && line[1] == 't')
+    for(int i = 0; i < mesh->mNumFaces; i++)
+    {
+        const aiFace* face = mesh->mFaces[i];
+        for(int j = 0; j < face.mNumIndices; j++)
         {
-            glm::vec2 uv{};
-            line.erase(0, 2);
-
-            char* parts[3];
-            parts[0] = strtok(&line[0], " ");
-            parts[1] = strtok(NULL, " ");
-
-            uv.x = atof(parts[0]);
-            uv.y = atof(parts[1]);
-            temp_uvs.emplace_back(uv);
-            num_uv++;
-
-        }
-        else if (line[0] == 'v' && line[1] == 'n')
-        {
-            glm::vec3 normal{};
-
-            line.erase(0, 2);
-
-            char* parts[3];
-            parts[0] = strtok(&line[0], " ");
-
-            for (int i = 1; i < 3; i++)
-            {
-                parts[i] = strtok(NULL, " ");
-            }
-
-            normal.x = atof(parts[0]);
-            normal.y = atof(parts[1]);
-            normal.z = atof(parts[2]);
-
-            temp_normals.emplace_back(normal);
-            num_normals++;
-
-        }
-        else if (line[0] == 'f')
-        {
-            std::string vertices[3];
-            int vertexIndex[3], uvIndex[3], normalIndex[3];
-            line.erase(0, 1);
-
-            char* parts[3];
-
-            parts[0] = strtok(&line[0], " ");
-            for (int i = 1; i < 3; i++)
-            {
-                parts[i] = strtok(NULL, " ");
-            }
-
-            vertexIndex[0] = atoi(strtok(parts[0], "/"));
-            uvIndex[0] = atoi(strtok(NULL, "/"));
-            normalIndex[0] = atoi(strtok(NULL, "/"));
-
-            vertexIndex[1] = atoi(strtok(parts[1], "/"));
-            uvIndex[1] = atoi(strtok(NULL, "/"));
-            normalIndex[1] = atoi(strtok(NULL, "/"));
-
-            vertexIndex[2] = atoi(strtok(parts[2], "/"));
-            uvIndex[2] = atoi(strtok(NULL, "/"));
-            normalIndex[2] = atoi(strtok(NULL, "/"));
-
-            vertexIndices.emplace_back(vertexIndex[0]);
-            vertexIndices.emplace_back(vertexIndex[1]);
-            vertexIndices.emplace_back(vertexIndex[2]);
-
-            uvIndices.emplace_back(uvIndex[0]);
-            uvIndices.emplace_back(uvIndex[1]);
-            uvIndices.emplace_back(uvIndex[2]);
-
-            normalIndices.emplace_back(normalIndex[0]);
-            normalIndices.emplace_back(normalIndex[1]);
-            normalIndices.emplace_back(normalIndex[2]);
+            
         }
     }
-    indexing(vertexIndices, uvIndices, normalIndices, temp_vertices, temp_uvs, temp_normals, obj);
-
+    
     return true;
 }
 
