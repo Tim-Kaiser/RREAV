@@ -43,5 +43,9 @@
 # build files
 build/*
 !build/.gitinclude
+
 # editor files
 .idea/
+
+#models
+!objects/*

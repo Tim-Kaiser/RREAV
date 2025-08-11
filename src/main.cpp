@@ -9,23 +9,20 @@
 
 
 int main() {
-    std::cout << "Hello World" << std::endl;
-
     Interface interface;
     //===== SHADER INIT =====
 	ShaderManager shaderManager;
 
-	std::unique_ptr<Shader> renderShader = shaderManager.CreateShaders("..\\shaders\\main.vert", "..\\shaders\\main.frag");
+	std::unique_ptr<Shader> renderShader = shaderManager.CreateShaders("resources/shaders/main.vert", "resources/shaders/main.frag");
 
 	Object obj;
-	if(!loadObject("../objects/quad.obj", obj))
+	if(!loadObject("resources/objects/quad.obj", obj))
     {
         std::cout << "Error creating object!" << std::endl;
         return 1;
     }
 
 	Model quadModel(&obj, false);
-
 
     while(interface.running())
     {
