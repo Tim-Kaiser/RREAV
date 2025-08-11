@@ -47,5 +47,5 @@ build/*
 # editor files
 .idea/
 
-#resources
-!resources/*
+#objects in resource folder
+!resources/objects/*
