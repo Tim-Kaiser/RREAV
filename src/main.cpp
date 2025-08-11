@@ -15,7 +15,7 @@ int main() {
     //===== SHADER INIT =====
 	ShaderManager shaderManager;
 
-	std::unique_ptr<Shader> renderShader = shaderManager.CreateShaders("../shaders/main.vert", "../shaders/main.frag");
+	std::unique_ptr<Shader> renderShader = shaderManager.CreateShaders("..\\shaders\\main.vert", "..\\shaders\\main.frag");
 
 	Object obj;
 	if(!loadObject("../objects/quad.obj", obj))

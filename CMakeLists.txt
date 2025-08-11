@@ -15,4 +15,4 @@ add_executable(rreav
     )
 
 target_include_directories(rreav PRIVATE include)
-target_link_libraries(rreav PRIVATE sfml-audio ImGui-SFML::ImGui-SFML glm::glm)
+target_link_libraries(rreav PRIVATE sfml-audio ImGui-SFML::ImGui-SFML glm::glm assimp)
