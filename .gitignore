@@ -46,7 +46,7 @@ build/*
 
 # editor files
 .idea/
-.vs
+.vs/
 
 #objects in resource folder
 !resources/objects/*
