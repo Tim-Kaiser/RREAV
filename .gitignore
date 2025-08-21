@@ -43,5 +43,10 @@
 # build files
 build/*
 !build/.gitinclude
+
 # editor files
 .idea/
+.vs/
+
+#objects in resource folder
+!resources/objects/*

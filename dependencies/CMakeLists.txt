@@ -28,5 +28,11 @@ FetchContent_Declare(
 	GIT_TAG 	0af55ccecd98d4e5a8d1fad7de25ba429d60e863
     GIT_PROGRESS TRUE
 )
-
 FetchContent_MakeAvailable(glm)
+
+FetchContent_Declare(
+    assimp
+    GIT_REPOSITORY https://github.com/assimp/assimp.git
+    GIT_TAG v6.0.2
+    GIT_PROGRESS TRUE)
+FetchContent_MakeAvailable(assimp)

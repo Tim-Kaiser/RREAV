@@ -58,6 +58,7 @@ bool ShaderManager::CompileShaders(const std::string& filename, GLuint& shaderID
 
     file.open(filename);
 
+
     if (!file) {
         std::cout << "Error reading shader file: " << filename << std::endl;
         return false;
