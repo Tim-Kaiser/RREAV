@@ -26,6 +26,7 @@ add_executable(rreav
     src/gl.c
     src/ObjectLoader.cpp
     src/Mesh.cpp
+    src/AudioManager.cpp
     )
 
 
