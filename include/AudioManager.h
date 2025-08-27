@@ -8,7 +8,7 @@
 class AudioManager {
 public:
   AudioManager(std::string filepath, uint16_t chunkSize, GLuint ssboIndex);
-  void getSampleData(std::vector<float> &sampleVec);
+  void getSampleData();
 
   void play();
   void pause();

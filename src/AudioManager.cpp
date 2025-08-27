@@ -15,8 +15,6 @@ AudioManager::AudioManager(std::string filepath, uint16_t chunkSize,
   m_sound.setBuffer(m_soundBuffer);
   m_sound.setLooping(true);
 
-  m_samples.reserve(chunkSize);
-
   setNormValues();
   setupAudioSSBO(ssboIndex);
 };
@@ -27,7 +25,13 @@ void AudioManager::pause() { m_sound.pause(); }
 
 void AudioManager::setVolume(float volume) { m_sound.setVolume(volume); }
 
-void AudioManager::update() { getSampleData(m_samples); }
+void AudioManager::update() {
+  getSampleData();
+  glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ssbo);
+  GLvoid *p = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
+  memcpy(p, m_samples.data(), m_samples.size() * sizeof(float));
+  glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+}
 
 void AudioManager::setNormValues() {
   const int16_t *samples = m_soundBuffer.getSamples();
@@ -41,7 +45,7 @@ void AudioManager::setupAudioSSBO(GLuint bufferIndex) {
   glGenBuffers(1, &m_ssbo);
   glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ssbo);
   glBufferData(GL_SHADER_STORAGE_BUFFER, m_chunkSize * sizeof(float),
-               m_samples.data(), GL_DYNAMIC_COPY);
+               m_samples.data(), GL_DYNAMIC_DRAW);
   glBindBufferBase(GL_SHADER_STORAGE_BUFFER, bufferIndex, m_ssbo);
   glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }
@@ -50,7 +54,7 @@ void AudioManager::bindAudioBuffer() {
   glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ssbo);
 }
 
-void AudioManager::getSampleData(std::vector<float> &sampleVec) {
+void AudioManager::getSampleData() {
   sf::Time currentPlaytime = m_sound.getPlayingOffset();
   int64_t currentSamplePosition =
       currentPlaytime.asSeconds() * m_soundBuffer.getSampleRate();
@@ -70,4 +74,5 @@ void AudioManager::getSampleData(std::vector<float> &sampleVec) {
                  [this](int x) {
                    return (float)(x - m_minValue) / (m_maxValue - m_minValue);
                  });
+  m_samples.shrink_to_fit();
 };
