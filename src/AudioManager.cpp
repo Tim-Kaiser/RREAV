@@ -1,8 +1,10 @@
 #include "../include/AudioManager.h"
 #include <algorithm>
 #include <cstddef>
+#include <cstring>
 #include <iterator>
 #include <vector>
+
 
 std::vector<float> AudioManager::m_samples = std::vector<float>();
 
@@ -29,7 +31,7 @@ void AudioManager::update() {
   getSampleData();
   glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ssbo);
   GLvoid *p = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
-  memcpy(p, m_samples.data(), m_samples.size() * sizeof(float));
+  std::memcpy(p, m_samples.data(), m_samples.size() * sizeof(float));
   glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
 
