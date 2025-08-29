@@ -5,7 +5,6 @@
 #include <iterator>
 #include <vector>
 
-
 std::vector<float> AudioManager::m_samples = std::vector<float>();
 
 AudioManager::AudioManager(std::string filepath, uint16_t chunkSize,
