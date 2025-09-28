@@ -1,10 +1,10 @@
 #define GLAD_GL_IMPLEMENTATION
-#include "../include/OpenGL/glad/gl.h"
+#include "../include/rreav/OpenGL/glad/gl.h"
 
 #include <optional>
 #include <stdexcept>
 
-#include "../include/Interface.h"
+#include "../include/rreav/Interface.h"
 
 Interface::Interface() : isRunning_(true) {
   window_.create(sf::VideoMode({800, 600}), "Test", sf::Style::Default,

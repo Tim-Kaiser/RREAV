@@ -20,11 +20,13 @@ add_library(rreav STATIC
     src/Mesh.cpp
     src/AudioManager.cpp
     )
+
+add_library(rreav::rreav ALIAS rreav)
 target_link_libraries(rreav PUBLIC sfml-audio ImGui-SFML::ImGui-SFML glm::glm assimp)
 
 option(BUILD_DEMO "Build RREAV with demo executable")
 set(demo)
-if(BUILD_DEMO)
+if(!BUILD_DEMO)
    set(demo EXCLUDE_FROM_ALL)
 endif()
 
