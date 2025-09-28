@@ -1,5 +1,5 @@
 #define GLAD_GL_IMPLEMENTATION
-#include <../include/glad/gl.h>
+#include "../include/OpenGL/glad/gl.h"
 
 #include <optional>
 #include <stdexcept>

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "glad/gl.h"
+#include "OpenGL/opengl.h"
 #include <SFML/OpenGL.hpp>
 #include <SFML/Window.hpp>
 
