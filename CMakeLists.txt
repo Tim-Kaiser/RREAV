@@ -22,4 +22,10 @@ add_library(rreav STATIC
     )
 target_link_libraries(rreav PUBLIC sfml-audio ImGui-SFML::ImGui-SFML glm::glm assimp)
 
-add_subdirectory(demo)
+option(BUILD_DEMO "Build RREAV with demo executable")
+set(demo)
+if(BUILD_DEMO)
+   set(demo EXCLUDE_FROM_ALL)
+endif()
+
+add_subdirectory(demo ${demo})
