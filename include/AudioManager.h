@@ -1,8 +1,8 @@
 #pragma once
 
-#include "SFML/Audio/Sound.hpp"
-#include "SFML/Audio/SoundBuffer.hpp"
-#include "glad/gl.h"
+#include "OpenGL/opengl.h"
+#include <SFML/Audio/Sound.hpp>
+#include <SFML/Audio/SoundBuffer.hpp>
 #include <cstdint>
 
 class AudioManager {

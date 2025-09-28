@@ -1,10 +1,4 @@
-#include <glm/glm.hpp>
-
-#include "AudioManager.h"
-#include "Interface.h"
-#include "Mesh.h"
-#include "ObjectLoader.h"
-#include "ShaderManager.h"
+#include "../include/rreav.h"
 
 #define chunkSize 2048
 
