@@ -1,18 +1,11 @@
 cmake_minimum_required(VERSION 3.21)
 project(rreav)
+include(GenerateExportHeader)
 
 set(CMAKE_CXX_STANDARD 20)
-set(BUILD_SHARED_LIBS OFF)
 add_subdirectory(dependencies)
 
-add_library(rreav
-    include/rreav/AudioManager.h
-    include/rreav/Interface.h
-    include/rreav/Mesh.h
-    include/rreav/ObjectLoader.h
-    include/rreav/ShaderManager.h
-    include/rreav/Utils.h
-
+add_library(rreav STATIC
     src/Interface.cpp 
     src/ShaderManager.cpp 
     src/gl.c
@@ -20,14 +13,27 @@ add_library(rreav
     src/Mesh.cpp
     src/AudioManager.cpp
     )
-add_library(rreav::rreav ALIAS rreav)
 target_link_libraries(rreav PUBLIC sfml-audio ImGui-SFML::ImGui-SFML glm::glm assimp)
 
+add_library(rreav::rreav ALIAS rreav)
 
 TARGET_INCLUDE_DIRECTORIES ( rreav PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/rreav>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/rreav>
 )
+
+generate_export_header(
+    rreav
+    EXPORT_FILE_NAME
+    export/rreav/rreav.h
+)
+
+target_include_directories(
+    rreav
+    PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/export>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
+
 if(PROJECT_IS_TOP_LEVEL)
     add_subdirectory(demo ${demo})
 endif()
