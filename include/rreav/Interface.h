@@ -8,9 +8,15 @@ class Interface {
 
 public:
   Interface();
+  Interface(std::string windowName, unsigned int windowWidth,
+            unsigned int windowHeight);
 
   void update();
   void draw();
+
+  void setFullscreen();
+  void setWindowed(unsigned int windowWidth, unsigned int windowHeight);
+  void setWindowedFullscreen();
 
   int getWidth() const;
   int getHeight() const;
@@ -19,7 +25,10 @@ public:
 private:
   sf::Window window_;
 
+  void setWindowActive();
+
   bool isRunning_;
   int width_;
   int height_;
+  std::string name_;
 };
