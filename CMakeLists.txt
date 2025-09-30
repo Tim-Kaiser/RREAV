@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.21)
 project(rreav)
 include(GenerateExportHeader)
 
+if(PROJECT_IS_TOP_LEVEL)
+    set(BUILD_SHARED_LIBS OFF)
+endif()
+
 set(CMAKE_CXX_STANDARD 20)
 add_subdirectory(dependencies)
 
@@ -17,15 +21,15 @@ target_link_libraries(rreav PUBLIC sfml-audio ImGui-SFML::ImGui-SFML glm::glm as
 
 add_library(rreav::rreav ALIAS rreav)
 
-TARGET_INCLUDE_DIRECTORIES ( rreav PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/rreav>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/rreav>
+target_include_directories( rreav PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
 )
 
 generate_export_header(
     rreav
     EXPORT_FILE_NAME
-    export/rreav/rreav.h
+    export/rreav/export_rreav.h
 )
 
 target_include_directories(
