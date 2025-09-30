@@ -1,4 +1,4 @@
-#include "../include/ObjectLoader.h"
+#include "../include/rreav/ObjectLoader.h"
 
 Mesh loadObject(const std::string &path) {
 

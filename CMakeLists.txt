@@ -6,12 +6,12 @@ set(BUILD_SHARED_LIBS OFF)
 add_subdirectory(dependencies)
 
 add_library(rreav STATIC
-    include/AudioManager.h
-    include/Interface.h
-    include/Mesh.h
-    include/ObjectLoader.h
-    include/ShaderManager.h
-    include/Utils.h
+    include/rreav/AudioManager.h
+    include/rreav/Interface.h
+    include/rreav/Mesh.h
+    include/rreav/ObjectLoader.h
+    include/rreav/ShaderManager.h
+    include/rreav/Utils.h
 
     src/Interface.cpp 
     src/ShaderManager.cpp 
@@ -20,12 +20,8 @@ add_library(rreav STATIC
     src/Mesh.cpp
     src/AudioManager.cpp
     )
+
+add_library(rreav::rreav ALIAS rreav)
 target_link_libraries(rreav PUBLIC sfml-audio ImGui-SFML::ImGui-SFML glm::glm assimp)
 
-option(BUILD_DEMO "Build RREAV with demo executable")
-set(demo)
-if(BUILD_DEMO)
-   set(demo EXCLUDE_FROM_ALL)
-endif()
-
-add_subdirectory(demo ${demo})
+# add_subdirectory(demo ${demo})

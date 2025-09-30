@@ -1,4 +1,4 @@
-#include "../include/Mesh.h"
+#include "../include/rreav/Mesh.h"
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices)
     : m_vertices(vertices), m_indices(indices) {
