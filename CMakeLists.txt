@@ -24,10 +24,9 @@ add_library(rreav::rreav ALIAS rreav)
 target_link_libraries(rreav PUBLIC sfml-audio ImGui-SFML::ImGui-SFML glm::glm assimp)
 
 
-target_include_directories(
-    rreav ${warning_guard}
-    PUBLIC
-    "\$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/rreav/include>"
+TARGET_INCLUDE_DIRECTORIES ( rreav PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include>
 )
 if(PROJECT_IS_TOP_LEVEL)
     add_subdirectory(demo ${demo})
