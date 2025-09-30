@@ -1,11 +1,11 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.21)
 project(rreav)
 
 set(CMAKE_CXX_STANDARD 20)
 set(BUILD_SHARED_LIBS OFF)
 add_subdirectory(dependencies)
 
-add_library(rreav STATIC
+add_library(rreav
     include/rreav/AudioManager.h
     include/rreav/Interface.h
     include/rreav/Mesh.h
@@ -20,8 +20,15 @@ add_library(rreav STATIC
     src/Mesh.cpp
     src/AudioManager.cpp
     )
-
 add_library(rreav::rreav ALIAS rreav)
 target_link_libraries(rreav PUBLIC sfml-audio ImGui-SFML::ImGui-SFML glm::glm assimp)
 
-# add_subdirectory(demo ${demo})
+
+target_include_directories(
+    rreav ${warning_guard}
+    PUBLIC
+    "\$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/rreav/include>"
+)
+if(PROJECT_IS_TOP_LEVEL)
+    add_subdirectory(demo ${demo})
+endif()
