@@ -1,3 +1,6 @@
+#include "SFML/Window/Keyboard.hpp"
+#include "SFML/Window/VideoMode.hpp"
+#include "SFML/Window/Window.hpp"
 #define GLAD_GL_IMPLEMENTATION
 #include "../include/rreav/OpenGL/glad/gl.h"
 
@@ -31,35 +34,24 @@ Interface::Interface(std::string windowName, unsigned int windowWidth,
   height_ = window_.getSize().y;
 }
 
-void Interface::update() {
-  while (const std::optional event = window_.pollEvent()) {
-    if (event->is<sf::Event::Closed>()) {
-      // end the program
-      isRunning_ = false;
-    } else if (const auto *resized = event->getIf<sf::Event::Resized>()) {
-      // adjust the viewport when the window is resized
-      glViewport(0, 0, resized->size.x, resized->size.y);
-      width_ = resized->size.x;
-      height_ = resized->size.y;
-    }
-  }
-}
+Interface::~Interface() { window_.close(); }
+
+void Interface::update() { handleEvents(); }
 
 void Interface::setFullscreen() {
-  window_.create(sf::VideoMode::getFullscreenModes()[0], name_,
-                 sf::Style::Default, sf::State::Fullscreen);
-  setWindowActive();
+  // SFML currently doesnt properly support switching between windowed and
+  // fullscreen at runtime. Might need a custom implementation to share OpenGL
+  // state between windows.
+  //  Create fullscreen window -> move OpenGL state over to new window -> set
+  //  new window as active (?)
 }
 void Interface::setWindowed(unsigned int windowWidth,
                             unsigned int windowHeight) {
-  window_.create(sf::VideoMode({windowWidth, windowHeight}), name_,
-                 sf::Style::Default, sf::State::Windowed);
-  setWindowActive();
+  window_.setSize({windowWidth, windowHeight});
 }
 void Interface::setWindowedFullscreen() {
-  window_.create(sf::VideoMode::getFullscreenModes()[0], name_,
-                 sf::Style::Default, sf::State::Windowed);
-  setWindowActive();
+  window_.setPosition({-8, 0});
+  window_.setSize({sf::VideoMode::getDesktopMode().size});
 }
 
 void Interface::draw() { window_.display(); }
@@ -73,5 +65,25 @@ int Interface::getHeight() const { return window_.getSize().y; }
 void Interface::setWindowActive() {
   if (!window_.setActive(true)) {
     throw std::runtime_error("Error setting widow to active.");
+  }
+}
+
+void Interface::handleEvents() {
+  while (const std::optional event = window_.pollEvent()) {
+    if (event->is<sf::Event::Closed>()) {
+      // end the program
+      isRunning_ = false;
+    } else if (const auto *resized = event->getIf<sf::Event::Resized>()) {
+      // adjust the viewport when the window is resized
+      glViewport(0, 0, resized->size.x, resized->size.y);
+      width_ = resized->size.x;
+      height_ = resized->size.y;
+    } else if (const auto *keyPressed = event->getIf<sf::Event::KeyPressed>()) {
+      if (keyPressed->scancode == sf::Keyboard::Scancode::Escape) {
+        isRunning_ = false;
+      } else if (keyPressed->scancode == sf::Keyboard::Scancode::F) {
+        setWindowedFullscreen();
+      }
+    }
   }
 }

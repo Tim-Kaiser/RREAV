@@ -10,8 +10,10 @@ public:
   Interface();
   Interface(std::string windowName, unsigned int windowWidth,
             unsigned int windowHeight);
+  ~Interface();
 
   void update();
+
   void draw();
 
   void setFullscreen();
@@ -26,6 +28,7 @@ private:
   sf::Window window_;
 
   void setWindowActive();
+  void handleEvents();
 
   bool isRunning_;
   int width_;
