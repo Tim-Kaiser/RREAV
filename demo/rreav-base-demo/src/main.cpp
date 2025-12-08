@@ -4,7 +4,7 @@
 
 int main() {
   //===== INIT =====
-  Interface interface;
+  Window window;
   ShaderManager shaderManager;
   AudioManager audioManager("resources/audio/sine_wave_1000hz_44.1sr.wav",
                             chunkSize, 0);
@@ -18,12 +18,12 @@ int main() {
   audioManager.setVolume(0.02);
   audioManager.play();
   audioManager.bindAudioBuffer();
-  while (interface.running()) {
+  while (window.running()) {
     audioManager.update();
 
     mesh.render();
-    interface.update();
-    interface.draw();
+    window.update();
+    window.draw();
   }
 
   return 0;

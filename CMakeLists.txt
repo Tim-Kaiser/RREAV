@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD 20)
 add_subdirectory(dependencies)
 
 add_library(rreav STATIC
-    src/Interface.cpp 
+    src/Window.cpp 
     src/ShaderManager.cpp 
     src/gl.c
     src/ObjectLoader.cpp

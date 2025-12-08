@@ -4,13 +4,13 @@
 #include <SFML/OpenGL.hpp>
 #include <SFML/Window.hpp>
 
-class Interface {
+class Window {
 
 public:
-  Interface();
-  Interface(std::string windowName, unsigned int windowWidth,
-            unsigned int windowHeight);
-  ~Interface();
+  Window();
+  Window(std::string windowName, unsigned int windowWidth,
+         unsigned int windowHeight);
+  ~Window();
 
   void update();
 
