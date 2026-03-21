@@ -1,2 +1,3 @@
 include/rreav/kiss-fft/* linguist-vendored
-include/rreav/OpenGL/* linguist-vendored
+gl.h linguist-vendored
+khrplatform.h linguist-vendored
