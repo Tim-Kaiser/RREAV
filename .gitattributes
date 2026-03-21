@@ -1,2 +1,2 @@
-include/rreav/kiss-fft linguist-vendored
-include/rreav/OpenGL linguist-vendored
+include/rreav/kiss-fft/* linguist-vendored
+include/rreav/OpenGL/* linguist-vendored
