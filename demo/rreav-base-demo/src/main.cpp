@@ -1,13 +1,12 @@
 #include "../include/rreav.h"
 
-#define chunkSize 2048
-
 int main() {
   //===== INIT =====
-  Window window;
+  Config cfg("resources/config.json");
+  Window window(cfg.getWindowName(), 800, 600);
   ShaderManager shaderManager;
   AudioManager audioManager("resources/audio/sine_wave_1000hz_44.1sr.wav",
-                            chunkSize, 0);
+                            cfg.getChunkSize(), 0);
 
   std::unique_ptr<Shader> renderShader = shaderManager.CreateShaders(
       "resources/shaders/main.vert", "resources/shaders/main.frag");

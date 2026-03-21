@@ -28,6 +28,9 @@ void AudioManager::setVolume(float volume) { m_sound.setVolume(volume); }
 
 void AudioManager::update() {
   getSampleData();
+  getFrequencyData();
+
+  // TODO add frequency data to SSBO
   glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ssbo);
   GLvoid *p = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
   std::memcpy(p, m_samples.data(), m_samples.size() * sizeof(float));
@@ -49,6 +52,8 @@ void AudioManager::setupAudioSSBO(GLuint bufferIndex) {
                m_samples.data(), GL_DYNAMIC_DRAW);
   glBindBufferBase(GL_SHADER_STORAGE_BUFFER, bufferIndex, m_ssbo);
   glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+  // TODO: add frequency data to SSBO
 }
 
 void AudioManager::bindAudioBuffer() {
@@ -76,4 +81,8 @@ void AudioManager::getSampleData() {
                    return (float)(x - m_minValue) / (m_maxValue - m_minValue);
                  });
   m_samples.shrink_to_fit();
+};
+
+void AudioManager::getFrequencyData() {
+  // TODO: implement
 };

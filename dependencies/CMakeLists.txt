@@ -36,3 +36,9 @@ FetchContent_Declare(
     GIT_TAG v6.0.2
     GIT_PROGRESS TRUE)
 FetchContent_MakeAvailable(assimp)
+
+
+FetchContent_Declare(
+    json 
+    URL https://github.com/nlohmann/json/releases/download/v3.12.0/json.tar.xz)
+FetchContent_MakeAvailable(json)

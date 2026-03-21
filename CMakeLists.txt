@@ -16,8 +16,9 @@ add_library(rreav STATIC
     src/ObjectLoader.cpp
     src/Mesh.cpp
     src/AudioManager.cpp
+    src/Config.cpp
     )
-target_link_libraries(rreav PUBLIC sfml-audio ImGui-SFML::ImGui-SFML glm::glm assimp)
+target_link_libraries(rreav PUBLIC sfml-audio ImGui-SFML::ImGui-SFML glm::glm assimp nlohmann_json::nlohmann_json)
 
 add_library(rreav::rreav ALIAS rreav)
 

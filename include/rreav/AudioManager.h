@@ -1,14 +1,17 @@
 #pragma once
 
 #include "OpenGL/opengl.h"
+#include "kiss-fft/kiss_fft.h"
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
 #include <cstdint>
+
 
 class AudioManager {
 public:
   AudioManager(std::string filepath, uint16_t chunkSize, GLuint ssboIndex);
   void getSampleData();
+  void getFrequencyData();
 
   void play();
   void pause();
@@ -24,6 +27,8 @@ private:
   sf::Sound m_sound;
 
   static std::vector<float> m_samples;
+  static std::vector<float> m_frequencies;
+
   GLuint m_ssbo;
   uint16_t m_chunkSize;
   int m_maxValue;
