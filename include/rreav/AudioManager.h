@@ -1,15 +1,18 @@
 #pragma once
 
 #include "OpenGL/opengl.h"
-#include "kiss-fft/kiss_fft.h"
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
-#include <cstdint>
 
+#ifndef RREAV_CHUNK_SIZE
+#define RREAV_CHUNK_SIZE 2048
+#endif
+
+#define RREAV_FREQUENCY_SIZE RREAV_CHUNK_SIZE / 2 + 1
 
 class AudioManager {
 public:
-  AudioManager(std::string filepath, uint16_t chunkSize, GLuint ssboIndex);
+  AudioManager(std::string filepath);
   void getSampleData();
   void getFrequencyData();
 
@@ -21,7 +24,7 @@ public:
 
 private:
   void setNormValues();
-  void setupAudioSSBO(GLuint bufferIndex);
+  void setupAudioSSBO();
 
   sf::SoundBuffer m_soundBuffer;
   sf::Sound m_sound;
@@ -29,8 +32,8 @@ private:
   static std::vector<float> m_samples;
   static std::vector<float> m_frequencies;
 
-  GLuint m_ssbo;
-  uint16_t m_chunkSize;
+  GLuint m_ssbo_samples;
+  GLuint m_ssbo_frequencies;
   int m_maxValue;
   int m_minValue;
 };

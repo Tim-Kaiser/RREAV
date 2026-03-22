@@ -1,9 +1,15 @@
 #version 460
 
-layout(std430, binding=0) buffer audioData
+layout(std430, binding=0) buffer sampleData
 {
 	float samples[];
 };
+
+layout(std430, binding=1) buffer frequencyData
+{
+	float frequencies[];
+};
+
 
 in vec2 vUv;
 in vec3 vertexOut;

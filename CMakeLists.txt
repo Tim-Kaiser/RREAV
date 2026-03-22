@@ -10,9 +10,12 @@ set(CMAKE_CXX_STANDARD 20)
 add_subdirectory(dependencies)
 
 add_library(rreav STATIC
+    include/rreav/OpenGL/gl.c
+    include/rreav/kiss-fft/kiss_fft.c
+    include/rreav/kiss-fft/kiss_fftr.c
+
     src/Window.cpp 
     src/ShaderManager.cpp 
-    src/gl.c
     src/ObjectLoader.cpp
     src/Mesh.cpp
     src/AudioManager.cpp

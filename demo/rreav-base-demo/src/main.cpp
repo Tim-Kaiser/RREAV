@@ -5,8 +5,7 @@ int main() {
   Config cfg("resources/config.json");
   Window window(cfg.getWindowName(), 800, 600);
   ShaderManager shaderManager;
-  AudioManager audioManager("resources/audio/sine_wave_1000hz_44.1sr.wav",
-                            cfg.getChunkSize(), 0);
+  AudioManager audioManager("resources/audio/sine_wave_1000hz_44.1sr.wav");
 
   std::unique_ptr<Shader> renderShader = shaderManager.CreateShaders(
       "resources/shaders/main.vert", "resources/shaders/main.frag");
