@@ -5,7 +5,7 @@
 #include <SFML/Audio/SoundBuffer.hpp>
 
 #ifndef RREAV_CHUNK_SIZE
-#define RREAV_CHUNK_SIZE 2048
+#define RREAV_CHUNK_SIZE 512
 #endif
 
 #define RREAV_FREQUENCY_SIZE RREAV_CHUNK_SIZE / 2 + 1

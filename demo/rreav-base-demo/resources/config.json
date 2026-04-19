@@ -1,4 +1,4 @@
 {
-    "chunkSize": 2048,
+    "chunkSize": 512,
     "windowName": "RREAV Demo"
 }

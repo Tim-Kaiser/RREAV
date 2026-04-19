@@ -5,7 +5,7 @@ int main() {
   Config cfg("resources/config.json");
   Window window(cfg.getWindowName(), 800, 600);
   ShaderManager shaderManager;
-  AudioManager audioManager("resources/audio/sine_wave_1000hz_44.1sr.wav");
+  AudioManager audioManager("resources/audio/pancake.ogg");
 
   std::unique_ptr<Shader> renderShader = shaderManager.CreateShaders(
       "resources/shaders/main.vert", "resources/shaders/main.frag");
@@ -13,7 +13,7 @@ int main() {
 
   Mesh mesh = loadObject("resources/objects/quad.obj");
 
-  audioManager.setVolume(0.02);
+  audioManager.setVolume(0.5f);
   audioManager.play();
   audioManager.bindAudioBuffer();
   while (window.running()) {

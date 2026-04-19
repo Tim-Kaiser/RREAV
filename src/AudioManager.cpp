@@ -48,6 +48,12 @@ void AudioManager::setNormValues() {
   const int16_t *samples = m_soundBuffer.getSamples();
   const size_t sampleCount = m_soundBuffer.getSampleCount();
 
+  if (sampleCount == 0) {
+    m_maxValue = 0;
+    m_minValue = 0;
+    return;
+  }
+
   m_maxValue = *std::max_element(samples, samples + sampleCount);
   m_minValue = *std::min_element(samples, samples + sampleCount);
 }
@@ -79,30 +85,50 @@ void AudioManager::bindAudioBuffer() {
 
 void AudioManager::getSampleData() {
   sf::Time currentPlaytime = m_sound.getPlayingOffset();
-  int64_t currentSamplePosition =
-      currentPlaytime.asSeconds() * m_soundBuffer.getSampleRate();
+  const size_t sampleRate = m_soundBuffer.getSampleRate();
   const size_t sampleCount = m_soundBuffer.getSampleCount();
   const int16_t *samples = m_soundBuffer.getSamples();
 
-  size_t chunkSize = currentSamplePosition + RREAV_CHUNK_SIZE > sampleCount
-                         ? sampleCount - currentSamplePosition
-                         : RREAV_CHUNK_SIZE;
-  std::vector<int> v;
-  v.reserve(chunkSize);
-  for (int i = 0; i < chunkSize; i++) {
-    v.emplace_back(*(samples + i));
+  if (sampleCount == 0) {
+    std::fill(m_samples.begin(), m_samples.end(), 0.0f);
+    return;
   }
-  m_samples.clear();
-  std::transform(v.begin(), v.end(), std::back_inserter(m_samples),
-                 [this](int x) {
-                   return (float)(x - m_minValue) / (m_maxValue - m_minValue);
-                 });
-  m_samples.shrink_to_fit();
+
+  int64_t currentSamplePosition64 =
+      static_cast<int64_t>(currentPlaytime.asSeconds() * sampleRate);
+  size_t currentSamplePosition =
+      currentSamplePosition64 < 0
+          ? 0
+          : static_cast<size_t>(currentSamplePosition64);
+
+  if (currentSamplePosition >= sampleCount) {
+    currentSamplePosition %= sampleCount;
+  }
+
+  const size_t chunkSize =
+      std::min(size_t(RREAV_CHUNK_SIZE), sampleCount - currentSamplePosition);
+  const float range = static_cast<float>(m_maxValue - m_minValue);
+  const float denom = range != 0.0f ? range : 1.0f;
+
+  for (size_t i = 0; i < chunkSize; i++) {
+    const int16_t sample = samples[currentSamplePosition + i];
+    m_samples[i] = (static_cast<float>(sample) - m_minValue) / denom;
+  }
+
+  for (size_t i = chunkSize; i < RREAV_CHUNK_SIZE; i++) {
+    m_samples[i] = 0.0f;
+  }
 };
 
 void AudioManager::getFrequencyData() {
-  m_frequencies.clear();
-  kiss_fftr_cfg cfg = kiss_fftr_alloc(RREAV_CHUNK_SIZE, 0, 0, 0);
+  if (m_samples.size() != RREAV_CHUNK_SIZE) {
+    return;
+  }
+
+  kiss_fftr_cfg cfg = kiss_fftr_alloc(RREAV_CHUNK_SIZE, 0, NULL, NULL);
+  if (!cfg) {
+    return;
+  }
 
   kiss_fft_scalar cx_in[RREAV_CHUNK_SIZE];
   kiss_fft_cpx cx_out[RREAV_FREQUENCY_SIZE];
@@ -112,11 +138,10 @@ void AudioManager::getFrequencyData() {
   }
 
   kiss_fftr(cfg, cx_in, cx_out);
+  free(cfg);
 
+  m_frequencies.resize(RREAV_FREQUENCY_SIZE);
   for (size_t i = 0; i < RREAV_FREQUENCY_SIZE; i++) {
-    m_frequencies.push_back(cx_out[i].r);
+    m_frequencies[i] = cx_out[i].r;
   }
-
-  m_frequencies.shrink_to_fit();
-  kiss_fft_free(cfg);
 };
