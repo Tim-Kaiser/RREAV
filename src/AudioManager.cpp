@@ -114,10 +114,6 @@ void AudioManager::getSampleData() {
     const int16_t sample = samples[currentSamplePosition + i];
     m_samples[i] = (static_cast<float>(sample) - m_minValue) / denom;
   }
-
-  for (size_t i = chunkSize; i < RREAV_CHUNK_SIZE; i++) {
-    m_samples[i] = 0.0f;
-  }
 };
 
 void AudioManager::getFrequencyData() {
