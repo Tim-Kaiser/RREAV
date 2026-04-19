@@ -49,7 +49,7 @@ build/*
 .vs/
 
 #objects in resource folder
-!resources/objects/*
+!demo/rreav-base-demo/resources/objects/*
 
 #audio files other than the test file
 demo/rreav-base-demo/resources/audio/*
