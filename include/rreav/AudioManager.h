@@ -10,6 +10,10 @@
 
 #define RREAV_FREQUENCY_SIZE RREAV_CHUNK_SIZE / 2 + 1
 
+// Audio output latency in milliseconds - compensate for hardware buffering
+// Adjust this value if display is still out of sync (typical range: 30-150ms)
+#define RREAV_AUDIO_LATENCY_MS 80
+
 class AudioManager {
 public:
   AudioManager(std::string filepath);

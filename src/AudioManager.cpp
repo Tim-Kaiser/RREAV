@@ -94,8 +94,12 @@ void AudioManager::getSampleData() {
     return;
   }
 
+  // Compensate for audio output latency by reading ahead
+  float latencySeconds = RREAV_AUDIO_LATENCY_MS / 1000.0f;
+  sf::Time compensatedTime = currentPlaytime + sf::seconds(latencySeconds);
+
   int64_t currentSamplePosition64 =
-      static_cast<int64_t>(currentPlaytime.asSeconds() * sampleRate);
+      static_cast<int64_t>(compensatedTime.asSeconds() * sampleRate);
   size_t currentSamplePosition =
       currentSamplePosition64 < 0
           ? 0
