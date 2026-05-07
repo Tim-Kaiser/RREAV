@@ -1,16 +1,18 @@
 #include "../include/rreav/AudioManager.h"
+#include "rreav/Config.h"
+#include "rreav/kiss-fft/kiss_fft.h"
 #include "rreav/kiss-fft/kiss_fftr.h"
 #include <algorithm>
 #include <cstddef>
 #include <cstring>
-#include <iterator>
+#include <numeric>
 #include <vector>
 
 std::vector<float> AudioManager::m_samples =
-    std::vector<float>(RREAV_CHUNK_SIZE, 0.0f);
+    std::vector<float>(Config::getInstance()->getChunkSize(), 0.0f);
 
 std::vector<float> AudioManager::m_frequencies =
-    std::vector<float>(RREAV_FREQUENCY_SIZE, 0.0f);
+    std::vector<float>(Config::getInstance()->getFrequencySize(), 0.0f);
 
 AudioManager::AudioManager(std::string filepath) : m_sound(m_soundBuffer) {
   if (!m_soundBuffer.loadFromFile(filepath)) {
@@ -29,12 +31,15 @@ void AudioManager::pause() { m_sound.pause(); }
 void AudioManager::setVolume(float volume) { m_sound.setVolume(volume); }
 
 void AudioManager::update() {
+
   getSampleData();
   getFrequencyData();
 
+  std::vector<float> norm = normalizeSampleData();
+
   glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ssbo_samples);
   GLvoid *p_samples = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
-  std::memcpy(p_samples, m_samples.data(), m_samples.size() * sizeof(float));
+  std::memcpy(p_samples, norm.data(), norm.size() * sizeof(float));
   glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
   glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ssbo_frequencies);
@@ -63,7 +68,8 @@ void AudioManager::setupAudioSSBO() {
 
   glGenBuffers(1, &m_ssbo_samples);
   glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ssbo_samples);
-  glBufferData(GL_SHADER_STORAGE_BUFFER, RREAV_CHUNK_SIZE * sizeof(float),
+  glBufferData(GL_SHADER_STORAGE_BUFFER,
+               Config::getInstance()->getChunkSize() * sizeof(float),
                m_samples.data(), GL_DYNAMIC_DRAW);
   glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_ssbo_samples);
   glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
@@ -72,7 +78,8 @@ void AudioManager::setupAudioSSBO() {
 
   glGenBuffers(1, &m_ssbo_frequencies);
   glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ssbo_frequencies);
-  glBufferData(GL_SHADER_STORAGE_BUFFER, RREAV_FREQUENCY_SIZE * sizeof(float),
+  glBufferData(GL_SHADER_STORAGE_BUFFER,
+               Config::getInstance()->getFrequencySize() * sizeof(float),
                m_frequencies.data(), GL_DYNAMIC_DRAW);
   glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_ssbo_frequencies);
   glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
@@ -89,59 +96,64 @@ void AudioManager::getSampleData() {
   const size_t sampleCount = m_soundBuffer.getSampleCount();
   const int16_t *samples = m_soundBuffer.getSamples();
 
-  if (sampleCount == 0) {
-    std::fill(m_samples.begin(), m_samples.end(), 0.0f);
-    return;
-  }
-
-  // Compensate for audio output latency by reading ahead
-  float latencySeconds = RREAV_AUDIO_LATENCY_MS / 1000.0f;
-  sf::Time compensatedTime = currentPlaytime + sf::seconds(latencySeconds);
+  std::iota(m_samples.begin(), m_samples.end(), 0.0f);
 
   int64_t currentSamplePosition64 =
-      static_cast<int64_t>(compensatedTime.asSeconds() * sampleRate);
+      static_cast<int64_t>(currentPlaytime.asSeconds() * sampleRate);
   size_t currentSamplePosition =
       currentSamplePosition64 < 0
           ? 0
           : static_cast<size_t>(currentSamplePosition64);
 
   if (currentSamplePosition >= sampleCount) {
-    currentSamplePosition %= sampleCount;
+    return;
   }
 
   const size_t chunkSize =
-      std::min(size_t(RREAV_CHUNK_SIZE), sampleCount - currentSamplePosition);
-  const float range = static_cast<float>(m_maxValue - m_minValue);
-  const float denom = range != 0.0f ? range : 1.0f;
+      std::min(size_t(Config::getInstance()->getChunkSize()),
+               sampleCount - currentSamplePosition);
 
   for (size_t i = 0; i < chunkSize; i++) {
     const int16_t sample = samples[currentSamplePosition + i];
-    m_samples[i] = (static_cast<float>(sample) - m_minValue) / denom;
+    m_samples[i] = static_cast<float>(sample);
   }
 };
 
 void AudioManager::getFrequencyData() {
-  if (m_samples.size() != RREAV_CHUNK_SIZE) {
+  if (m_samples.size() != Config::getInstance()->getChunkSize()) {
     return;
   }
+  std::iota(m_frequencies.begin(), m_frequencies.end(), 0.0f);
 
-  kiss_fftr_cfg cfg = kiss_fftr_alloc(RREAV_CHUNK_SIZE, 0, NULL, NULL);
+  kiss_fftr_cfg cfg =
+      kiss_fftr_alloc(Config::getInstance()->getChunkSize(), 0, NULL, NULL);
   if (!cfg) {
     return;
   }
 
-  kiss_fft_scalar cx_in[RREAV_CHUNK_SIZE];
-  kiss_fft_cpx cx_out[RREAV_FREQUENCY_SIZE];
+  std::vector<kiss_fft_scalar> cx_in(Config::getInstance()->getChunkSize());
+  std::vector<kiss_fft_cpx> cx_out(Config::getInstance()->getFrequencySize());
 
-  for (size_t i = 0; i < RREAV_CHUNK_SIZE; i++) {
+  for (size_t i = 0; i < Config::getInstance()->getChunkSize(); i++) {
     cx_in[i] = m_samples[i];
   }
 
-  kiss_fftr(cfg, cx_in, cx_out);
+  kiss_fftr(cfg, cx_in.data(), cx_out.data());
   free(cfg);
 
-  m_frequencies.resize(RREAV_FREQUENCY_SIZE);
-  for (size_t i = 0; i < RREAV_FREQUENCY_SIZE; i++) {
+  for (size_t i = 0; i < Config::getInstance()->getFrequencySize(); i++) {
     m_frequencies[i] = cx_out[i].r;
   }
+};
+
+std::vector<float> AudioManager::normalizeSampleData() {
+  std::vector<float> normalized;
+  float range = static_cast<float>(m_maxValue - m_minValue);
+  float denom = range != 0.0f ? range : 1.0f;
+
+  std::transform(m_samples.begin(), m_samples.end(),
+                 std::back_inserter(normalized), [this, denom](float sample) {
+                   return (sample - static_cast<float>(m_minValue)) / denom;
+                 });
+  return normalized;
 };

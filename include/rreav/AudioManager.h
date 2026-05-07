@@ -4,16 +4,6 @@
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
 
-#ifndef RREAV_CHUNK_SIZE
-#define RREAV_CHUNK_SIZE 1024
-#endif
-
-#define RREAV_FREQUENCY_SIZE RREAV_CHUNK_SIZE / 2 + 1
-
-// Audio output latency in milliseconds - compensate for hardware buffering
-// Adjust this value if display is still out of sync (typical range: 30-150ms)
-#define RREAV_AUDIO_LATENCY_MS 80
-
 class AudioManager {
 public:
   AudioManager(std::string filepath);
@@ -29,6 +19,7 @@ public:
 private:
   void setNormValues();
   void setupAudioSSBO();
+  std::vector<float> normalizeSampleData();
 
   sf::SoundBuffer m_soundBuffer;
   sf::Sound m_sound;
