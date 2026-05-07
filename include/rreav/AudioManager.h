@@ -3,12 +3,12 @@
 #include "OpenGL/opengl.h"
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
-#include <cstdint>
 
 class AudioManager {
 public:
-  AudioManager(std::string filepath, uint16_t chunkSize, GLuint ssboIndex);
+  AudioManager(std::string filepath);
   void getSampleData();
+  void getFrequencyData();
 
   void play();
   void pause();
@@ -18,14 +18,17 @@ public:
 
 private:
   void setNormValues();
-  void setupAudioSSBO(GLuint bufferIndex);
+  void setupAudioSSBO();
+  std::vector<float> normalizeSampleData();
 
   sf::SoundBuffer m_soundBuffer;
   sf::Sound m_sound;
 
   static std::vector<float> m_samples;
-  GLuint m_ssbo;
-  uint16_t m_chunkSize;
+  static std::vector<float> m_frequencies;
+
+  GLuint m_ssbo_samples;
+  GLuint m_ssbo_frequencies;
   int m_maxValue;
   int m_minValue;
 };

@@ -1,0 +1,3 @@
+include/rreav/kiss-fft/* linguist-vendored
+gl.h linguist-vendored
+khrplatform.h linguist-vendored

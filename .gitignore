@@ -49,4 +49,8 @@ build/*
 .vs/
 
 #objects in resource folder
-!resources/objects/*
+!demo/rreav-base-demo/resources/objects/*
+
+#audio files other than the test file
+demo/rreav-base-demo/resources/audio/*
+!demo/rreav-base-demo/resources/audio/sine_wave_1000hz_44.1sr.wav

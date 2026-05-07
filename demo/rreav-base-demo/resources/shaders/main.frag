@@ -1,21 +1,33 @@
 #version 460
 
-layout(std430, binding=0) buffer audioData
+layout(std430, binding=0) buffer sampleData
 {
 	float samples[];
+};
+
+layout(std430, binding=1) buffer frequencyData
+{
+	float frequencies[];
 };
 
 in vec2 vUv;
 in vec3 vertexOut;
 
-
 out vec4 fragCol;
 
 void main(){
 
-	float wave = samples[int(vUv.x * samples.length())] * 0.9;
+	int idx = int(vUv.x * float(samples.length()));
+	idx = clamp(idx, 0, int(samples.length()) - 1);
+	float wave = samples[idx];
 
-	float c = smoothstep(0.0, 0.2, abs(wave - vUv.y));
+	int fftIdx = int(vUv.x * float(frequencies.length()));
+	fftIdx = clamp(fftIdx, 0, int(frequencies.length()) - 1);
+	float fft = clamp(frequencies[fftIdx], -1.0, 1.0);
 
-	fragCol = vec4(c, c, c, 1.);
+	vec3 col = vec3( fft, 4.0*fft*(1.0-fft), 1.0-fft ) * fft;
+	col = vec3(1.0);
+	col -= min(smoothstep(0.0, 0.1, abs(wave - vUv.y)), 0.9);
+
+	fragCol = vec4(col, 1.);
 }
