@@ -26,7 +26,8 @@ void main(){
 	float fft = clamp(frequencies[fftIdx], -1.0, 1.0);
 
 	vec3 col = vec3( fft, 4.0*fft*(1.0-fft), 1.0-fft ) * fft;
-	col = vec3(1.0) - smoothstep(0.0, 0.15, abs(wave - vUv.y));
+	col = vec3(1.0);
+	col -= min(smoothstep(0.0, 0.1, abs(wave - vUv.y)), 0.9);
 
 	fragCol = vec4(col, 1.);
 }
