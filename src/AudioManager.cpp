@@ -113,9 +113,8 @@ void AudioManager::getSampleData() {
   const size_t halfChunk = chunkSize / 2;
 
   // Calculate the start position (half chunk before current position)
-  int64_t startPos = static_cast<int64_t>(currentSamplePosition) -
-                     static_cast<int64_t>(halfChunk);
-  startPos = std::max(startPos, 0LL);
+  size_t startPos = currentSamplePosition - halfChunk;
+  startPos = std::max(startPos, (size_t)0);
 
   // Calculate the end position (half chunk after current position)
   size_t endPos = currentSamplePosition + halfChunk;
