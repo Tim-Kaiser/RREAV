@@ -7,8 +7,11 @@ This is a lightweight cross platform graphics engine for AV programs!
 Build with CMake on your preferred platform. SFML required some additional dependencies on Linux, refer to [the documentation](https://www.sfml-dev.org/tutorials/3.0/getting-started/cmake/#customize-the-cmake-project-and-executable-names) or the gitlab workflow in this project.
 
 ### Windows
+Install the MSVC compiler [here](https://visualstudio.microsoft.com/vs/features/cplusplus/).
 
-Build with Ninja
+1. `cmake -B build -S . -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=1`
+2. `cmake --build build`
+
 
 ## Dependencies
 
