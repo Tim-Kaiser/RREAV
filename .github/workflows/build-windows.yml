@@ -1,0 +1,25 @@
+name: Windows
+run-name: ${{github.actor}} build
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Create build folder
+        run: mkdir build
+
+      - name: CMake Config
+        run: cmake -B build -S . -G "Visual Studio 17 2022"
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Test
+        run: ctest --build-config Release

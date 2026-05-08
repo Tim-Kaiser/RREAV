@@ -1,4 +1,4 @@
-name: build
+name: Linux
 run-name: ${{github.actor}} build
 on:
   pull_request:
@@ -12,16 +12,16 @@ env:
   BUILD_TYPE: Release
 
 jobs:
-  build:
+  build-linux:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install Linux Dependencies (SFML)
         run: sudo apt-get update && sudo apt-get install libxrandr-dev libxcursor-dev libxi-dev libudev-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libfreetype-dev
 
       - name: CMake Config
-        run: cmake  -B $BUILD_DIR -S $BASE_DIR
+        run: cmake -B $BUILD_DIR -S $BASE_DIR
 
       - name: Build
         run: cmake --build $BUILD_DIR --config $BUILD_TYPE
