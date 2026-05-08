@@ -12,14 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Install ninja
-        run: pip3 install ninja
-
       - name: Create build folder
         run: mkdir build
 
       - name: CMake Config
-        run: cmake -B build -S . -G Ninja
+        run: cmake -B build -S . -G "Visual Studio 17 2022"
 
       - name: Build
         run: cmake --build build --config Release
