@@ -27,8 +27,8 @@ jobs:
         run: cmake -B build -S . -G Ninja
 
       - name: Build
-        run: cmake --build build --config $BUILD_TYPE
+        run: cmake --build build --config Release
 
       - name: Test
-        run: ctest --build-config $BUILD_TYPE
+        run: ctest --build-config Release
 
