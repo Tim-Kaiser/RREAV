@@ -1,0 +1,31 @@
+name: build
+run-name: ${{github.actor}} build
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+env:
+  BUILD_DIR: ${{github.workspace}}/build
+  BASE_DIR: ${{github.workspace}}
+  BUILD_TYPE: Release
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install ninja
+        run: pip3 install ninja
+
+      - name: CMake Config
+        run: cmake  -B $BUILD_DIR -S $BASE_DIR -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=1
+
+      - name: Build
+        run: cmake --build $BUILD_DIR --config $BUILD_TYPE
+
+      - name: Test
+        run: ctest --build-config $BUILD_TYPE
+
