@@ -15,7 +15,7 @@ jobs:
   build-windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Install ninja
         run: pip3 install ninja
@@ -24,7 +24,7 @@ jobs:
         run: mkdir build
 
       - name: CMake Config
-        run: cmake -B build -S $BASE_DIR -G Ninja
+        run: cmake -B build -S . -G Ninja
 
       - name: Build
         run: cmake --build build --config $BUILD_TYPE
