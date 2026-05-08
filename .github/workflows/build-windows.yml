@@ -1,4 +1,4 @@
-name: build
+name: Windows
 run-name: ${{github.actor}} build
 on:
   pull_request:
@@ -6,16 +6,11 @@ on:
   push:
     branches: [main]
 
-env:
-  BUILD_DIR: ${{github.workspace}}\build
-  BASE_DIR: ${{github.workspace}}
-  BUILD_TYPE: Release
-
 jobs:
   build-windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install ninja
         run: pip3 install ninja
@@ -31,4 +26,3 @@ jobs:
 
       - name: Test
         run: ctest --build-config Release
-

@@ -1,4 +1,4 @@
-name: build
+name: Linux
 run-name: ${{github.actor}} build
 on:
   pull_request:
