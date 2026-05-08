@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 env:
-  BUILD_DIR: ${{github.workspace}}/build
+  BUILD_DIR: ${{github.workspace}}\build
   BASE_DIR: ${{github.workspace}}
   BUILD_TYPE: Release
 
@@ -21,7 +21,7 @@ jobs:
         run: pip3 install ninja
 
       - name: CMake Config
-        run: cmake  -B $BUILD_DIR -S $BASE_DIR -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=1
+        run: cmake -B $BUILD_DIR -S $BASE_DIR -G Ninja
 
       - name: Build
         run: cmake --build $BUILD_DIR --config $BUILD_TYPE

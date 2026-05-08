@@ -21,7 +21,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install libxrandr-dev libxcursor-dev libxi-dev libudev-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libfreetype-dev
 
       - name: CMake Config
-        run: cmake  -B $BUILD_DIR -S $BASE_DIR
+        run: cmake -B $BUILD_DIR -S $BASE_DIR
 
       - name: Build
         run: cmake --build $BUILD_DIR --config $BUILD_TYPE
