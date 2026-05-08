@@ -21,13 +21,13 @@ jobs:
         run: pip3 install ninja
 
       - name: Create build folder
-        run: mkdir $BUILD_DIR
+        run: mkdir build
 
       - name: CMake Config
-        run: cmake -B $BUILD_DIR -S $BASE_DIR -G Ninja
+        run: cmake -B build -S $BASE_DIR -G Ninja
 
       - name: Build
-        run: cmake --build $BUILD_DIR --config $BUILD_TYPE
+        run: cmake --build build --config $BUILD_TYPE
 
       - name: Test
         run: ctest --build-config $BUILD_TYPE
