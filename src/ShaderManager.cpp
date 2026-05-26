@@ -170,7 +170,7 @@ GLint ShaderManager::GetUniformID(const std::string &uniformName) {
 }
 
 bool ShaderManager::SendUniformData(const std::string &uniformName,
-                                    GLint &data) {
+                                    GLint data) {
   GLint id = GetUniformID(uniformName);
 
   if (id == -1) {
@@ -182,7 +182,7 @@ bool ShaderManager::SendUniformData(const std::string &uniformName,
 }
 
 bool ShaderManager::SendUniformData(const std::string &uniformName,
-                                    GLfloat &data) {
+                                    GLfloat data) {
   GLint id = GetUniformID(uniformName);
 
   if (id == -1) {
@@ -194,7 +194,7 @@ bool ShaderManager::SendUniformData(const std::string &uniformName,
 }
 
 bool ShaderManager::SendUniformData(const std::string &uniformName,
-                                    GLuint &data) {
+                                    GLuint data) {
   GLint id = GetUniformID(uniformName);
 
   if (id == -1) {
@@ -205,8 +205,8 @@ bool ShaderManager::SendUniformData(const std::string &uniformName,
   return true;
 }
 
-bool ShaderManager::SendUniformData(const std::string &uniformName, GLfloat &x,
-                                    GLfloat &y) {
+bool ShaderManager::SendUniformData(const std::string &uniformName, GLfloat x,
+                                    GLfloat y) {
   GLint id = GetUniformID(uniformName);
 
   if (id == -1) {
@@ -217,8 +217,8 @@ bool ShaderManager::SendUniformData(const std::string &uniformName, GLfloat &x,
   return true;
 }
 
-bool ShaderManager::SendUniformData(const std::string &uniformName, GLfloat &x,
-                                    GLfloat &y, GLfloat &z) {
+bool ShaderManager::SendUniformData(const std::string &uniformName, GLfloat x,
+                                    GLfloat y, GLfloat z) {
   GLint id = GetUniformID(uniformName);
 
   if (id == -1) {
@@ -229,8 +229,8 @@ bool ShaderManager::SendUniformData(const std::string &uniformName, GLfloat &x,
   return true;
 }
 
-bool ShaderManager::SendUniformData(const std::string &uniformName, GLfloat &x,
-                                    GLfloat &y, GLfloat &z, GLfloat &w) {
+bool ShaderManager::SendUniformData(const std::string &uniformName, GLfloat x,
+                                    GLfloat y, GLfloat z, GLfloat w) {
   GLint id = GetUniformID(uniformName);
 
   if (id == -1) {
