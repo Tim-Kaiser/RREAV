@@ -20,6 +20,7 @@ private:
   void setNormValues();
   void setupAudioSSBO();
   std::vector<float> normalizeSampleData();
+  std::vector<float> normalizeFrequencyData();
 
   sf::SoundBuffer m_soundBuffer;
   sf::Sound m_sound;
