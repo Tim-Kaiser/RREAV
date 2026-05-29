@@ -58,9 +58,9 @@ void Window::draw() { window_.display(); }
 
 bool Window::running() const { return isRunning_; }
 
-int Window::getWidth() const { return window_.getSize().x; }
+int Window::getWidth() const { return width_; }
 
-int Window::getHeight() const { return window_.getSize().y; }
+int Window::getHeight() const { return height_; }
 
 void Window::setWindowActive() {
   if (!window_.setActive(true)) {
