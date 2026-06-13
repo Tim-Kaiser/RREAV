@@ -7,8 +7,6 @@
 class AudioManager {
 public:
   AudioManager(std::string filepath);
-  void getSampleData();
-  void getFrequencyData();
 
   void play();
   void pause();
@@ -17,6 +15,9 @@ public:
   void update();
 
 private:
+  void getSampleData();
+  void getFrequencyData();
+
   void setNormValues();
   void setupAudioSSBO();
   std::vector<float> normalizeSampleData();
