@@ -16,7 +16,7 @@ jobs:
         run: mkdir build
 
       - name: CMake Config
-        run: cmake -B build -S . -G "Visual Studio 18 2022"
+        run: cmake -B build -S . -G "Visual Studio 18 2026"
 
       - name: Build
         run: cmake --build build --config Release
