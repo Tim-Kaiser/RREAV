@@ -36,7 +36,6 @@ void AudioManager::update() {
   getFrequencyData();
 
   std::vector<float> normSamples = normalizeSampleData();
-  std::vector<float> normFrequencies = normalizeFrequencyData();
 
   glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ssbo_samples);
   GLvoid *p_samples = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
@@ -46,8 +45,8 @@ void AudioManager::update() {
 
   glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ssbo_frequencies);
   GLvoid *p_freq = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
-  std::memcpy(p_freq, normFrequencies.data(),
-              normFrequencies.size() * sizeof(float));
+  std::memcpy(p_freq, m_frequencies.data(),
+              m_frequencies.size() * sizeof(float));
   glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
 
@@ -167,21 +166,6 @@ std::vector<float> AudioManager::normalizeSampleData() {
   std::transform(m_samples.begin(), m_samples.end(),
                  std::back_inserter(normalized), [this, denom](float sample) {
                    return (sample - static_cast<float>(m_minValue)) / denom;
-                 });
-  return normalized;
-};
-
-std::vector<float> AudioManager::normalizeFrequencyData() {
-  std::vector<float> normalized;
-  float range = *std::max_element(m_frequencies.begin(), m_frequencies.end()) -
-                *std::min_element(m_frequencies.begin(), m_frequencies.end());
-  float denom = range != 0.0f ? range : 1.0f;
-
-  std::transform(m_frequencies.begin(), m_frequencies.end(),
-                 std::back_inserter(normalized), [this, denom](float freq) {
-                   return (freq - *std::min_element(m_frequencies.begin(),
-                                                    m_frequencies.end())) /
-                          denom;
                  });
   return normalized;
 };
