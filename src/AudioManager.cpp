@@ -1,8 +1,8 @@
 #include "../include/rreav/AudioManager.h"
 #include "rreav/Config.h"
 #include "rreav/kiss-fft/kiss_fft.h"
-#include "rreav/kiss-fft/kiss_fftr.h"
 #include <algorithm>
+#include <cmath>
 #include <cstddef>
 #include <cstring>
 #include <numeric>
@@ -136,24 +136,26 @@ void AudioManager::getFrequencyData() {
   }
   std::iota(m_frequencies.begin(), m_frequencies.end(), 0.0f);
 
-  kiss_fftr_cfg cfg =
-      kiss_fftr_alloc(Config::getInstance()->getChunkSize(), 0, NULL, NULL);
+  kiss_fft_cfg cfg =
+      kiss_fft_alloc(Config::getInstance()->getChunkSize(), 0, NULL, NULL);
   if (!cfg) {
     return;
   }
 
-  std::vector<kiss_fft_scalar> cx_in(Config::getInstance()->getChunkSize());
-  std::vector<kiss_fft_cpx> cx_out(Config::getInstance()->getFrequencySize());
+  std::vector<kiss_fft_cpx> cx_in(Config::getInstance()->getChunkSize());
+  std::vector<kiss_fft_cpx> cx_out(Config::getInstance()->getChunkSize());
 
   for (size_t i = 0; i < Config::getInstance()->getChunkSize(); i++) {
-    cx_in[i] = m_samples[i];
+    cx_in[i].r = m_samples[i];
+    cx_in[i].i = 0.0f;
   }
 
-  kiss_fftr(cfg, cx_in.data(), cx_out.data());
+  kiss_fft(cfg, cx_in.data(), cx_out.data());
   free(cfg);
 
   for (size_t i = 0; i < Config::getInstance()->getFrequencySize(); i++) {
-    m_frequencies[i] = cx_out[i].r;
+    m_frequencies[i] =
+        std::sqrt(cx_out[i].r * cx_out[i].r + cx_out[i].i * cx_out[i].i);
   }
 };
 
