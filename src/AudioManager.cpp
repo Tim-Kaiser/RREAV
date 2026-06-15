@@ -1,3 +1,5 @@
+#define _USE_MATH_DEFINES
+
 #include "../include/rreav/AudioManager.h"
 #include "rreav/Config.h"
 #include "rreav/kiss-fft/kiss_fft.h"
@@ -14,12 +16,22 @@ std::vector<float> AudioManager::m_samples =
 std::vector<float> AudioManager::m_frequencies =
     std::vector<float>(Config::getInstance()->getFrequencySize(), 0.0f);
 
+std::vector<float> AudioManager::m_hann_values =
+    std::vector<float>(Config::getInstance()->getChunkSize(), 0.0f);
+
 AudioManager::AudioManager(std::string filepath) : m_sound(m_soundBuffer) {
   if (!m_soundBuffer.loadFromFile(filepath)) {
     throw std::runtime_error("Error loading audio file.");
   }
   m_sound.setBuffer(m_soundBuffer);
   m_sound.setLooping(true);
+
+  for (size_t i = 0; i < Config::getInstance()->getChunkSize(); i++) {
+    float hannValue =
+        0.5 *
+        (1 - cos((2 * M_PI * i) / (Config::getInstance()->getChunkSize() - 1)));
+    m_hann_values[i] = hannValue;
+  }
 
   setupAudioSSBO();
 };
@@ -145,7 +157,7 @@ void AudioManager::getFrequencyData() {
   std::vector<kiss_fft_cpx> cx_out(Config::getInstance()->getChunkSize());
 
   for (size_t i = 0; i < Config::getInstance()->getChunkSize(); i++) {
-    cx_in[i].r = m_samples[i];
+    cx_in[i].r = m_samples[i] * m_hann_values[i];
     cx_in[i].i = 0.0f;
   }
 

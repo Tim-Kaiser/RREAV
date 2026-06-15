@@ -27,6 +27,7 @@ private:
 
   static std::vector<float> m_samples;
   static std::vector<float> m_frequencies;
+  static std::vector<float> m_hann_values;
 
   GLuint m_ssbo_samples;
   GLuint m_ssbo_frequencies;
