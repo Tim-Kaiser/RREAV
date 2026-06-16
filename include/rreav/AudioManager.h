@@ -21,13 +21,13 @@ private:
   void setNormValues();
   void setupAudioSSBO();
   std::vector<float> normalizeSampleData();
-  std::vector<float> normalizeFrequencyData();
 
   sf::SoundBuffer m_soundBuffer;
   sf::Sound m_sound;
 
   static std::vector<float> m_samples;
   static std::vector<float> m_frequencies;
+  static std::vector<float> m_hann_values;
 
   GLuint m_ssbo_samples;
   GLuint m_ssbo_frequencies;

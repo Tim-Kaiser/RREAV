@@ -20,3 +20,4 @@ Install the MSVC compiler [here](https://visualstudio.microsoft.com/vs/features/
 - Dear ImGui
 - glm
 - nlohmanjson
+- KissFFT
