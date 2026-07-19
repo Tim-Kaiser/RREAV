@@ -9,6 +9,8 @@ on:
 jobs:
   build-windows:
     runs-on: windows-2022
+    cache:
+      key: "$CI_JOB_NAME-$CI_COMMIT_REF_SLUG"
     steps:
       - uses: actions/checkout@v6
 
