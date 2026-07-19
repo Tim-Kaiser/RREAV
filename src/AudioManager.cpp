@@ -42,7 +42,7 @@ void AudioManager::pause() { m_sound.pause(); }
 
 void AudioManager::setVolume(float volume) { m_sound.setVolume(volume); }
 
-void AudioManager::update() {
+void AudioManager::update(bool doNormalize) {
 
   getSampleData();
   getFrequencyData();
@@ -50,17 +50,30 @@ void AudioManager::update() {
   std::vector<float> normSamples = normalizeSampleData();
   std::vector<float> normFrequencies = normalizeFrequencyData();
 
-  glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ssbo_samples);
-  GLvoid *p_samples = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
-  std::memcpy(p_samples, normSamples.data(),
-              normSamples.size() * sizeof(float));
-  glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+  if (doNormalize) {
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ssbo_samples);
+    GLvoid *p_samples = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
+    std::memcpy(p_samples, normSamples.data(),
+                normSamples.size() * sizeof(float));
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
-  glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ssbo_frequencies);
-  GLvoid *p_freq = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
-  std::memcpy(p_freq, normFrequencies.data(),
-              normFrequencies.size() * sizeof(float));
-  glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ssbo_frequencies);
+    GLvoid *p_freq = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
+    std::memcpy(p_freq, normFrequencies.data(),
+                normFrequencies.size() * sizeof(float));
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+  } else {
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ssbo_samples);
+    GLvoid *p_samples = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
+    std::memcpy(p_samples, m_samples.data(), m_samples.size() * sizeof(float));
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ssbo_frequencies);
+    GLvoid *p_freq = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
+    std::memcpy(p_freq, m_frequencies.data(),
+                m_frequencies.size() * sizeof(float));
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+  }
 }
 
 void AudioManager::setNormValues() {
@@ -124,21 +137,14 @@ void AudioManager::getSampleData() {
   }
 
   const size_t chunkSize = Config::getInstance()->getChunkSize();
-  const size_t halfChunk = chunkSize / 2;
-
-  // Calculate the start position (half chunk before current position)
-  size_t startPos = currentSamplePosition - halfChunk;
-  startPos = std::max(startPos, (size_t)0);
-
-  // Calculate the end position (half chunk after current position)
-  size_t endPos = currentSamplePosition + halfChunk;
-  endPos = std::min(endPos, sampleCount);
 
   // Copy samples from startPos to endPos
-  size_t sampleIndex = 0;
-  for (size_t i = startPos; i < endPos && sampleIndex < chunkSize; i++) {
-    m_samples[sampleIndex] = static_cast<float>(samples[i]);
-    sampleIndex++;
+  for (int i = 0; i < chunkSize; i++) {
+    if (currentSamplePosition + i >= sampleCount) {
+      m_samples[i] = 0.0f;
+    } else {
+      m_samples[i] = static_cast<float>(samples[currentSamplePosition + i]);
+    }
   }
 };
 

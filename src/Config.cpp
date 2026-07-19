@@ -19,7 +19,7 @@ void Config::init(const std::string filepath) {
   json data = json::parse(cfg_file);
   if (data.contains("chunkSize") && data["chunkSize"].is_number()) {
     m_chunkSize = data["chunkSize"].get<int>();
-    m_frequencySize = m_chunkSize / 2 + 1;
+    m_frequencySize = m_chunkSize / 2.0 + 1;
   }
 
   if (data.contains("windowName") && data["windowName"].is_string()) {

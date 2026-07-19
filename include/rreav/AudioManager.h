@@ -12,7 +12,7 @@ public:
   void pause();
   void setVolume(float volume);
   void bindAudioBuffer();
-  void update();
+  void update(bool doNormalize);
 
 private:
   void getSampleData();
