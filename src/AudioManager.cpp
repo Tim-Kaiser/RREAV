@@ -124,21 +124,14 @@ void AudioManager::getSampleData() {
   }
 
   const size_t chunkSize = Config::getInstance()->getChunkSize();
-  const size_t halfChunk = chunkSize / 2;
-
-  // Calculate the start position (half chunk before current position)
-  size_t startPos = currentSamplePosition - halfChunk;
-  startPos = std::max(startPos, (size_t)0);
-
-  // Calculate the end position (half chunk after current position)
-  size_t endPos = currentSamplePosition + halfChunk;
-  endPos = std::min(endPos, sampleCount);
 
   // Copy samples from startPos to endPos
-  size_t sampleIndex = 0;
-  for (size_t i = startPos; i < endPos && sampleIndex < chunkSize; i++) {
-    m_samples[sampleIndex] = static_cast<float>(samples[i]);
-    sampleIndex++;
+  for (int i = 0; i < chunkSize; i++) {
+    if (currentSamplePosition + i >= sampleCount) {
+      m_samples[i] = 0.0f;
+    } else {
+      m_samples[i] = static_cast<float>(samples[currentSamplePosition + i]);
+    }
   }
 };
 
