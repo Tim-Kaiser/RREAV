@@ -26,7 +26,7 @@ int main() {
     int t = clock.getElapsedTime().asMilliseconds();
     // ~90fps
     if (t > 10 && t < 12) {
-      audioManager.update();
+      audioManager.update(true);
 
       mesh.render();
       window.update();

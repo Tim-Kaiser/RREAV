@@ -5,4 +5,3 @@
 #include "../../../include/rreav/ObjectLoader.h"
 #include "../../../include/rreav/ShaderManager.h"
 #include "../../../include/rreav/Window.h"
-
