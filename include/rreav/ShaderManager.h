@@ -40,6 +40,10 @@ public:
   void DetachShaders(ComputeShader &shader);
   void DestroyShaders(ComputeShader &shader);
 
+  // === TEXTURE ===
+
+  void CreateTexture2D(GLuint *textureID, int width, int height, GLint format);
+
   bool SendUniformData(const std::string &uniformName, GLint data);
   bool SendUniformData(const std::string &uniformName, GLfloat data);
   bool SendUniformData(const std::string &uniformName, GLuint data);

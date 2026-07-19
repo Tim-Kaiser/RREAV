@@ -157,6 +157,16 @@ void ShaderManager::DestroyShaders(ComputeShader &shader) {
   glDeleteShader(shader.m_computeShaderID);
 }
 
+void CreateTexture2D(GLuint *textureID, GLint format, int width, int height) {
+  glGenTextures(1, textureID);
+  glActiveTexture(GL_TEXTURE2);
+  glBindTexture(GL_TEXTURE_2D, *textureID);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, GL_RGBA, GL_FLOAT,
+               NULL);
+}
+
 GLint ShaderManager::GetUniformID(const std::string &uniformName) {
 
   GLint currentProgram = 0;
